@@ -25,6 +25,8 @@ public class Tetris implements KeyListener {
 
         panel.setLocation(0, 0);
 
+        panel.setBackground(Color.CYAN);
+
         panel.setSize(150, 745);
 
         gameFrame.add(panel);
@@ -35,9 +37,17 @@ public class Tetris implements KeyListener {
 
         gameFrame.setVisible(true);
 
-        drawBackground();
+        linesLbl.setLocation(10, 70);
+
+        linesLbl.setSize(100, 20);
+
+        panel.add(linesLbl);
     }
-    
+
+    private int lines = 0;
+
+    private JLabel linesLbl = new JLabel("Lines: " + lines);
+
     private int board[][] = new int[24][10];
 
     private ArrayList<Piece> pieces = new ArrayList<>();
@@ -63,30 +73,6 @@ public class Tetris implements KeyListener {
            return false;
         }
         return true;
-    }
-
-    private void drawMarioOnPanel(JPanel panel) {
-
-        ImageIcon imageIcon = new ImageIcon(this.getClass().getResource("/mario.gif"));
-
-        Image image = imageIcon.getImage();
-
-        Graphics g = panel.getGraphics();
-
-        g.drawImage(image, 0, 0, 150, 80, null);
-
-    }
-
-    private void drawBackground() {
-
-        Graphics g = panel.getGraphics();
-
-        ImageIcon icon = new ImageIcon(this.getClass().getResource("/bg.jpg"));
-
-        Image img = icon.getImage();
-
-        g.drawImage(img, 0, 0, panel.getWidth(), panel.getHeight(), null);
-
     }
 
     public boolean juxtaposedLeftSideways(ArrayList<Piece> pieces) {
@@ -147,6 +133,12 @@ public class Tetris implements KeyListener {
     }
 
     public void play() {
+
+        for(int i=0; i<this.board.length; i++) {
+            for(int j=0; j<this.board[i].length; j++) {
+                this.board[i][j] = 0;
+            }
+        }
 
         String type = null;
 
@@ -297,16 +289,15 @@ public class Tetris implements KeyListener {
 
                 pieces.add(piece);
 
-
             }
 
             clearBlocksWhenBlocksAreALine();
 
+            linesLbl.setText("Lines: " + lines);
+
             exitIfReachedTopThePiece();
 
             this.redrawBlocks();
-
-            drawMarioOnPanel(panel);
 
         }
     }
@@ -315,7 +306,7 @@ public class Tetris implements KeyListener {
         for(int i=0; i<piece.blocks.size(); i++) {
             for(int j=0; j<pieces.size(); j++) {
                 for(int k=0; k<pieces.get(j).blocks.size(); k++) {
-                    if(pieces.get(j).setType.equals("") && pieces.get(j).blocks.get(k).y == piece.blocks.get(i).y) {
+                    if(piece.blocks.get(0).y < 10 && pieces.get(j).setType.equals("") && pieces.get(j).blocks.get(k).y == piece.blocks.get(i).y) {
                         System.exit(0);
                     }
                 }
@@ -344,13 +335,16 @@ public class Tetris implements KeyListener {
                         if(linesToClear.get(i) == y) {
                             break;
                         }
-                        else if(i == linesToClear.size() - 1)
+                        else if(i == linesToClear.size() - 1) {
                             linesToClear.add(y);
+                            lines++;
+                        }
                     }
 
                     if(linesToClear.isEmpty()) {
 
                         linesToClear.add(y);
+                        lines++;
                     }
 
                 }
@@ -362,8 +356,7 @@ public class Tetris implements KeyListener {
                     for(int j=0; j<pieces.get(i).blocks.size(); j++) {
                         if(pieces.get(i).blocks.get(j).y == linesToClear.get(h)) {
 
-                            pieces.get(i).blocks.remove(j);
-                            pieces.get(i).blocks.trimToSize();
+                            pieces.get(i).blocks.get(j).y = 1000;
 
                         }
                     }
@@ -373,7 +366,6 @@ public class Tetris implements KeyListener {
                     for(int j=0; j<pieces.get(i).blocks.size(); j++) {
                         if(pieces.get(i).blocks.get(j).y < linesToClear.get(h)) {
 
-                            this.board[linesToClear.get(h)][pieces.get(i).blocks.get(j).x] = 1;
                             pieces.get(i).blocks.get(j).y++;
 
                         }
@@ -389,20 +381,28 @@ public class Tetris implements KeyListener {
             }
             for(int i=0; i<pieces.size(); i++) {
                 for(int j=0; j<pieces.get(i).blocks.size(); j++) {
-                    this.board[pieces.get(i).blocks.get(j).y][pieces.get(i).blocks.get(j).x] = 1;
+                    if(pieces.get(i).blocks.get(j).y != 1000) {
+                        this.board[pieces.get(i).blocks.get(j).y][pieces.get(i).blocks.get(j).x] = 1;
+                    }
                 }
             }
         }
         catch(ArrayIndexOutOfBoundsException aioobe){/*handle/ignore when piece 'y is less than 0 (current piece comes down..)*/}
     }
 
-
-
     public void redrawBlocks() {
 
         gamePanel.paintComponent(gamePanel.getGraphics());
 
-        this.drawBgOnPanel(gamePanel);
+        gamePanel.setPanel(gamePanel);
+
+        ImageIcon imageIcon = new ImageIcon(this.getClass().getResource("/tetris.jpg"));
+
+        Image image = imageIcon.getImage();
+
+        Graphics g = gamePanel.getGraphics();
+
+        g.drawImage(image, 0, 0, gamePanel.getWidth(), gamePanel.getHeight(), null);
 
         for(int i=0; i<pieces.size(); i++) {
 
@@ -473,25 +473,15 @@ public class Tetris implements KeyListener {
 
     }
 
-    private void drawBgOnPanel(GamePanel panel) {
+    /* main program */
+    public static void main(String args[]) {
 
-        ImageIcon imageIcon = new ImageIcon(this.getClass().getResource("/bg.jpg"));
+        Tetris tetris = new Tetris();
 
-        Image image = imageIcon.getImage();
-
-        Graphics g = panel.getGraphics();
-
-        g.drawImage(image, 0, 0, panel.getWidth(), panel.getHeight(), null);
+        tetris.play();
 
     }
 
     /* unused methods */
     public void keyTyped(KeyEvent e){}public void keyReleased(KeyEvent e){}
-
-    /* driver program */
-    public static void main(String args[]) {
-        Tetris tetris = new Tetris();
-
-        tetris.play();
-    }
 }
