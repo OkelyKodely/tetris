@@ -38,7 +38,7 @@ public class GamePanel extends JPanel {
 
         Image image[] = new Image[4];
 
-        ArrayList<Integer> list = new ArrayList<>();
+        ArrayList<Integer> list = new ArrayList<Integer>();
         for (int i=1; i<=4; i++) {
             list.add(new Integer(i));
         }

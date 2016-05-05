@@ -66,7 +66,7 @@ public class Tetris implements KeyListener {
 
     private int board[][] = new int[16][10];
 
-    private ArrayList<Piece> pieces = new ArrayList<>();
+    private ArrayList<Piece> pieces = new ArrayList<Piece>();
 
     private Piece piece;
 
@@ -333,7 +333,7 @@ public class Tetris implements KeyListener {
     private void clearBlocksWhenBlocksAreALine() {
         try {
             boolean needToClearLine = true;
-            ArrayList<Integer> linesToClear = new ArrayList<>();
+            ArrayList<Integer> linesToClear = new ArrayList<Integer>();
 
             for(int y=0; y<16; y++) {
                 for(int x=0; x<10; x++) {

@@ -12,7 +12,7 @@ public class Piece {
 
     public String setType = "";
 
-    public ArrayList<Block> blocks = new ArrayList<>();
+    public ArrayList<Block> blocks = new ArrayList<Block>();
 
     public void setType(String setType) {
         this.setType = setType;
@@ -21,8 +21,7 @@ public class Piece {
     public Piece(String type) {
         this.type = type;
         Block block;
-        switch(type) {
-            case "line" :
+        if(type.equals("line")) {
                 block = new Block();
                 block.x = 0;
                 block.y = 3;
@@ -39,8 +38,8 @@ public class Piece {
                 block.x = 0;
                 block.y = 0;
                 blocks.add(block);
-                break;
-            case "square":
+
+        } else if(type.equals("square")) {
 
                 block = new Block();
                 block.x = 0;
@@ -58,8 +57,8 @@ public class Piece {
                 block.x = 1;
                 block.y = 1;
                 blocks.add(block);
-                break;
-            case "LArm":
+
+        } else if(type.equals("LArm")) {
 
                 block = new Block();
                 block.x = 0;
@@ -67,25 +66,6 @@ public class Piece {
                 blocks.add(block);
                 block = new Block();
                 block.x = -1;
-                block.y = 2;
-                blocks.add(block);
-                block = new Block();
-                block.x = 0;
-                block.y = 1;
-                blocks.add(block);
-                block = new Block();
-                block.x = 0;
-                block.y = 0;
-                blocks.add(block);
-                break;
-            case "RArm":
-
-                block = new Block();
-                block.x = 0;
-                block.y = 2;
-                blocks.add(block);
-                block = new Block();
-                block.x = 1;
                 block.y = 2;
                 blocks.add(block);
                 block = new Block();
@@ -96,8 +76,27 @@ public class Piece {
                 block.x = 0;
                 block.y = 0;
                 blocks.add(block);
-                break;
-            case "Hat":
+
+        } else if(type.equals("RArm")) {
+
+                block = new Block();
+                block.x = 0;
+                block.y = 2;
+                blocks.add(block);
+                block = new Block();
+                block.x = 1;
+                block.y = 2;
+                blocks.add(block);
+                block = new Block();
+                block.x = 0;
+                block.y = 1;
+                blocks.add(block);
+                block = new Block();
+                block.x = 0;
+                block.y = 0;
+                blocks.add(block);
+
+        } else if(type.equals("Hat")) {
 
                 block = new Block();
                 block.x = 0;
@@ -115,8 +114,8 @@ public class Piece {
                 block.x = -1;
                 block.y = 0;
                 blocks.add(block);
-                break;
-            case "LShoulder":
+
+        } else if(type.equals("LShoulder")) {
 
                 block = new Block();
                 block.x = 0;
@@ -134,8 +133,8 @@ public class Piece {
                 block.x = 1;
                 block.y = 0;
                 blocks.add(block);
-                break;
-            case "RShoulder":
+
+        } else if(type.equals("RShoulder")) {
 
                 block = new Block();
                 block.x = 0;
@@ -153,7 +152,6 @@ public class Piece {
                 block.x = -1;
                 block.y = 0;
                 blocks.add(block);
-                break;
         }
     }
 
@@ -161,8 +159,7 @@ public class Piece {
 
         Block block;
 
-        switch(type) {
-            case "line" :
+        if(type.equals("line")) {
 
                 block = blocks.get(0);
                 block.x = x;
@@ -176,8 +173,8 @@ public class Piece {
                 block = blocks.get(3);
                 block.x = x;
                 block.y = y;
-                break;
-            case "square":
+
+        } else if(type.equals("square")) {
 
                 block = blocks.get(0);
                 block.x = x;
@@ -191,8 +188,8 @@ public class Piece {
                 block = blocks.get(3);
                 block.x = x + 1;
                 block.y = y;
-                break;
-            case "LArm":
+
+        } else if(type.equals("LArm")) {
 
                 block = blocks.get(0);
                 block.x = x;
@@ -206,8 +203,8 @@ public class Piece {
                 block = blocks.get(3);
                 block.x = x;
                 block.y = y;
-                break;
-            case "RArm":
+
+        } else if(type.equals("RArm")) {
 
                 block = blocks.get(0);
                 block.x = x;
@@ -221,8 +218,8 @@ public class Piece {
                 block = blocks.get(3);
                 block.x = x;
                 block.y = y;
-                break;
-            case "Hat":
+    
+        } else if(type.equals("Hat")) {
 
                 block = blocks.get(0);
                 block.x = x;
@@ -236,8 +233,8 @@ public class Piece {
                 block = blocks.get(3);
                 block.x = x;
                 block.y = y;
-                break;
-            case "LShoulder":
+
+        } else if(type.equals("LShoulder")) {
 
                 block = blocks.get(0);
                 block.x = x;
@@ -251,8 +248,8 @@ public class Piece {
                 block = blocks.get(3);
                 block.x = x + 1;
                 block.y = y;
-                break;
-            case "RShoulder":
+
+        } else if(type.equals("RShoulder")) {
 
                 block = blocks.get(0);
                 block.x = x;
@@ -266,11 +263,7 @@ public class Piece {
                 block = blocks.get(3);
                 block.x = x - 1;
                 block.y = y;
-                break;
-
-
         }
-
     }
 
     public void flip() {
