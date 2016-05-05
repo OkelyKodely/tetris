@@ -1,7 +1,13 @@
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
+import java.awt.Component;
 import javax.swing.*;
+import javax.sound.sampled.*;
+import java.io.*;
+import java.util.logging.*;
+import java.util.Arrays;
+import java.net.URL;
 
 public class Tetris implements KeyListener {
 
@@ -15,11 +21,11 @@ public class Tetris implements KeyListener {
 
         gameFrame.setLocation(width/2-225, 0);
 
-        gameFrame.setSize(600, 745);
+        gameFrame.setSize(600, 790);
 
         gamePanel.setLocation(150, 0);
 
-        gamePanel.setSize(450, 745);
+        gamePanel.setSize(450, 790);
 
         gameFrame.add(gamePanel);
 
@@ -27,11 +33,13 @@ public class Tetris implements KeyListener {
 
         panel.setBackground(Color.white);
 
-        panel.setSize(150, 745);
+        panel.setSize(150, 790);
 
         gameFrame.add(panel);
 
         gameFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        gameFrame.setResizable(false);
 
         gameFrame.addKeyListener(this);
 
@@ -41,51 +49,51 @@ public class Tetris implements KeyListener {
 
         linesLbl.setSize(150, 20);
 
-        panel.add(linesLbl);
+        JLabel fruits1 = new JLabel("SUPER TETRIS");
 
-        JLabel fruits1 = new JLabel("Fruits are our");
-
-        JLabel fruits2 = new JLabel("best health candy!");
+        JLabel fruits2 = new JLabel("do do do dodo do do do!");
 
         fruits1.setLocation(10, 100);
 
         fruits2.setLocation(10, 120);
         
-        fruits1.setFont(new Font("arial", Font.ITALIC, 14));
+        fruits1.setFont(new Font("arial", Font.ITALIC, 12));
 
-        fruits2.setFont(new Font("arial", Font.ITALIC, 14));
+        fruits2.setFont(new Font("arial", Font.ITALIC, 10));
 
         panel.add(fruits1);
 
         panel.add(fruits2);
+
+        panel.add(linesLbl);
     }
 
     private int lines = 0;
 
     private JLabel linesLbl = new JLabel("Lines: " + lines);
 
-    private int board[][] = new int[16][10];
+    private int board[][] = new int[17][10];
 
     private ArrayList<Piece> pieces = new ArrayList<Piece>();
 
     private Piece piece;
 
-    private int delay = 1000;
+    private int delay = 2000;
 
-    private JFrame gameFrame = new JFrame("Fruity Tetris");
+    private JFrame gameFrame = new JFrame("SUPER TETRIS");
 
     private GamePanel gamePanel = new GamePanel();
 
     private JPanel panel = new JPanel();
 
     private boolean isNotDown(Piece piece) {
-       if(piece.blocks.get(0).y == 15
+       if(piece.blocks.get(0).y == 16
                 ||
-                piece.blocks.get(1).y == 15
+                piece.blocks.get(1).y == 16
                 ||
-                piece.blocks.get(2).y == 15
+                piece.blocks.get(2).y == 16
                 ||
-                piece.blocks.get(3).y == 15) {
+                piece.blocks.get(3).y == 16) {
            return false;
         }
         return true;
@@ -149,6 +157,8 @@ public class Tetris implements KeyListener {
     }
 
     public void play() {
+
+        linesLbl.setText("Lines: " + lines);
 
         for(int i=0; i<this.board.length; i++) {
             for(int j=0; j<this.board[i].length; j++) {
@@ -234,7 +244,20 @@ public class Tetris implements KeyListener {
 
                     ||
 
-                    juxtaposedTopways(pieces)) {
+                    juxtaposedTopways(pieces) || reachedTopThePiece()) {
+
+
+                if(reachedTopThePiece()) {
+                    delay = 2000;
+                    lines = 0;
+                    for(int i=0; i<this.board.length; i++) {
+                        for(int j=0; j<this.board[i].length; j++) {
+                            this.board[i][j] = 0;
+                        }
+                    }
+                    pieces.removeAll(pieces);
+                    pieces.trimToSize();
+                }
 
 
                 String _type = null;
@@ -311,23 +334,22 @@ public class Tetris implements KeyListener {
 
             linesLbl.setText("Lines: " + lines);
 
-            exitIfReachedTopThePiece();
-
             this.redrawBlocks();
 
         }
     }
 
-    private void exitIfReachedTopThePiece() {
+    private boolean reachedTopThePiece() {
         for(int i=0; i<piece.blocks.size(); i++) {
             for(int j=0; j<pieces.size(); j++) {
                 for(int k=0; k<pieces.get(j).blocks.size(); k++) {
-                    if(piece.blocks.get(0).y < 10 && pieces.get(j).setType.equals("") && pieces.get(j).blocks.get(k).y == piece.blocks.get(i).y) {
-                        System.exit(0);
+                    if(piece.blocks.get(0).y < 5 && pieces.get(j).setType.equals("") && pieces.get(j).blocks.get(k).y == piece.blocks.get(i).y) {
+                        return true;
                     }
                 }
             }
         }
+        return false;
     }
 
     private void clearBlocksWhenBlocksAreALine() {
@@ -335,7 +357,7 @@ public class Tetris implements KeyListener {
             boolean needToClearLine = true;
             ArrayList<Integer> linesToClear = new ArrayList<Integer>();
 
-            for(int y=0; y<16; y++) {
+            for(int y=0; y<17; y++) {
                 for(int x=0; x<10; x++) {
 
                     if(this.board[y][x] != 1) {
@@ -354,6 +376,8 @@ public class Tetris implements KeyListener {
                         else if(i == linesToClear.size() - 1) {
                             linesToClear.add(y);
                             lines++;
+                            if(lines % 2 == 0)delay=delay-10;
+                            if(delay < 600)delay=600;
                         }
                     }
 
@@ -361,6 +385,8 @@ public class Tetris implements KeyListener {
 
                         linesToClear.add(y);
                         lines++;
+                        if(lines % 2 == 0)delay=delay-10;
+                        if(delay < 600)delay = 600;
                     }
 
                 }
@@ -390,7 +416,7 @@ public class Tetris implements KeyListener {
                 }
             }
 
-            for(int i=0; i<16; i++) {
+            for(int i=0; i<17; i++) {
                 for(int j=0; j<10; j++) {
                     this.board[i][j] = 0;
                 }
@@ -403,7 +429,8 @@ public class Tetris implements KeyListener {
                 }
             }
         }
-        catch(ArrayIndexOutOfBoundsException aioobe){/*handle/ignore when piece 'y is less than 0 (current piece comes down..)*/}
+        catch(ArrayIndexOutOfBoundsException aioobe) {
+        }
     }
 
     public void redrawBlocks() {
@@ -488,16 +515,9 @@ public class Tetris implements KeyListener {
         }
 
     }
-
-    /* main program */
     public static void main(String args[]) {
-
         Tetris tetris = new Tetris();
-
         tetris.play();
-
     }
-
-    /* unused methods */
     public void keyTyped(KeyEvent e){}public void keyReleased(KeyEvent e){}
 }
