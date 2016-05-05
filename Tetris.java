@@ -15,17 +15,17 @@ public class Tetris implements KeyListener {
 
         gameFrame.setLocation(width/2-225, 0);
 
-        gameFrame.setSize(450, 745);
+        gameFrame.setSize(600, 745);
 
         gamePanel.setLocation(150, 0);
 
-        gamePanel.setSize(300, 745);
+        gamePanel.setSize(450, 745);
 
         gameFrame.add(gamePanel);
 
         panel.setLocation(0, 0);
 
-        panel.setBackground(Color.CYAN);
+        panel.setBackground(Color.white);
 
         panel.setSize(150, 745);
 
@@ -39,16 +39,32 @@ public class Tetris implements KeyListener {
 
         linesLbl.setLocation(10, 70);
 
-        linesLbl.setSize(100, 20);
+        linesLbl.setSize(150, 20);
 
         panel.add(linesLbl);
+
+        JLabel fruits1 = new JLabel("Fruits are our");
+
+        JLabel fruits2 = new JLabel("best health candy!");
+
+        fruits1.setLocation(10, 100);
+
+        fruits2.setLocation(10, 120);
+        
+        fruits1.setFont(new Font("arial", Font.ITALIC, 14));
+
+        fruits2.setFont(new Font("arial", Font.ITALIC, 14));
+
+        panel.add(fruits1);
+
+        panel.add(fruits2);
     }
 
     private int lines = 0;
 
     private JLabel linesLbl = new JLabel("Lines: " + lines);
 
-    private int board[][] = new int[24][10];
+    private int board[][] = new int[16][10];
 
     private ArrayList<Piece> pieces = new ArrayList<>();
 
@@ -56,20 +72,20 @@ public class Tetris implements KeyListener {
 
     private int delay = 1000;
 
-    private JFrame gameFrame = new JFrame("Tetris");
+    private JFrame gameFrame = new JFrame("Fruity Tetris");
 
     private GamePanel gamePanel = new GamePanel();
 
     private JPanel panel = new JPanel();
 
     private boolean isNotDown(Piece piece) {
-       if(piece.blocks.get(0).y == 23
+       if(piece.blocks.get(0).y == 15
                 ||
-                piece.blocks.get(1).y == 23
+                piece.blocks.get(1).y == 15
                 ||
-                piece.blocks.get(2).y == 23
+                piece.blocks.get(2).y == 15
                 ||
-                piece.blocks.get(3).y == 23) {
+                piece.blocks.get(3).y == 15) {
            return false;
         }
         return true;
@@ -319,7 +335,7 @@ public class Tetris implements KeyListener {
             boolean needToClearLine = true;
             ArrayList<Integer> linesToClear = new ArrayList<>();
 
-            for(int y=0; y<24; y++) {
+            for(int y=0; y<16; y++) {
                 for(int x=0; x<10; x++) {
 
                     if(this.board[y][x] != 1) {
@@ -374,7 +390,7 @@ public class Tetris implements KeyListener {
                 }
             }
 
-            for(int i=0; i<24; i++) {
+            for(int i=0; i<16; i++) {
                 for(int j=0; j<10; j++) {
                     this.board[i][j] = 0;
                 }
@@ -416,7 +432,7 @@ public class Tetris implements KeyListener {
 
             case KeyEvent.VK_LEFT :
 
-                if(!juxtaposedRightSideways(pieces)) {
+                if(!juxtaposedRightSideways(pieces) && piece.blocks.get(0).x > 0 && piece.blocks.get(1).x > 0 && piece.blocks.get(2).x > 0 && piece.blocks.get(3).x > 0) {
                     piece.moveLeft();
                     this.redrawBlocks();
                 }
@@ -425,7 +441,7 @@ public class Tetris implements KeyListener {
 
             case KeyEvent.VK_RIGHT :
 
-                if(!juxtaposedLeftSideways(pieces)) {
+                if(!juxtaposedLeftSideways(pieces) && piece.blocks.get(0).x < 9 && piece.blocks.get(1).x < 9 && piece.blocks.get(2).x < 9 && piece.blocks.get(3).x < 9) {
                     piece.moveRight();
                     this.redrawBlocks();
                 }
