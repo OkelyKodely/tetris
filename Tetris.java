@@ -66,7 +66,38 @@ public class Tetris implements KeyListener {
         panel.add(fruits2);
 
         panel.add(linesLbl);
+
+		scores.add("<High Scores>");
+                try {
+                       	FileInputStream fstream = new FileInputStream("score.dat");
+                       	BufferedReader br = new BufferedReader(new InputStreamReader(fstream));
+                       	String strLine;
+                       	while ((strLine = br.readLine()) != null)   {
+                               	try {
+                                       	scores.add(strLine);
+                               	} catch(Exception ex) {
+                               	}
+                       	}
+                       	br.close();
+                } catch(Exception ex) {
+                }
+                scoreList.setSize(110,320);
+                scoreList.setListData(scores.toArray());
+                scoreList.setForeground(Color.MAGENTA);
+                final JScrollPane scoreListScrollPane = new JScrollPane(scoreList);
+                scoreListScrollPane.setSize(110,320);
+		scoreListScrollPane.setLocation(20,320);
+
+	panel.add(scoreListScrollPane);
+
+	scoreListScrollPane.show();
+
+	gameFrame.requestFocus();
     }
+
+    private ArrayList<String> scores = new ArrayList<String>();
+
+    private JList scoreList = new JList();
 
     private int lines = 0;
 
@@ -246,6 +277,47 @@ public class Tetris implements KeyListener {
 
                     juxtaposedTopways(pieces) || reachedTopThePiece()) {
 
+try {
+        				FileInputStream fr = new FileInputStream("score.dat");
+				        DataInputStream dr = new DataInputStream(fr);
+					ArrayList<String> ss = new ArrayList<String>();
+				        while(dr.available() > 0) {
+					    String sss = "";
+					    ss.add(sss = dr.readLine());
+				        }
+				        dr.close();
+				        fr.close();
+					final ArrayList<String> ssss = new ArrayList<String>();
+					ssss.add(lines*100000 + "");
+					int max = -1;
+					for(int i=0; i<ss.size(); i++) {
+						int v = Integer.parseInt(ss.get(i));
+						if(v > max)
+							max = v;
+						ssss.add(ss.get(i));
+					}
+					if(lines*100000 > max && lines > 0) {
+						File file = new File("score.dat");
+						file.delete();
+						final String input = lines*100000+"";
+						ssss.set(0, input);
+						ArrayList<String> al = new ArrayList<String>();
+						for(int i=0; i<scores.size(); i++) {
+							if(i==1) {
+								al.add(input);
+							}
+							al.add(scores.get(i));
+						}
+						scoreList.setListData(al.toArray());
+				        	PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("score.dat", true)));
+						for(int i=0; i<ssss.size(); i++) {
+				        		out.println(ssss.get(i));
+						}
+				        	out.close();
+					}
+				} catch(Exception ex) {
+				}
+				lines = 0;
 
                 if(reachedTopThePiece()) {
                     delay = 2000;
