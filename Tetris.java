@@ -21,11 +21,11 @@ public class Tetris implements KeyListener {
 
         gameFrame.setLocation(width/2-225, 0);
 
-        gameFrame.setSize(600, 790);
+        gameFrame.setSize(600, 747);
 
         gamePanel.setLocation(150, 0);
 
-        gamePanel.setSize(450, 790);
+        gamePanel.setSize(450, 747);
 
         gameFrame.add(gamePanel);
 
@@ -33,7 +33,7 @@ public class Tetris implements KeyListener {
 
         panel.setBackground(Color.white);
 
-        panel.setSize(150, 790);
+        panel.setSize(150, 747);
 
         gameFrame.add(panel);
 
@@ -103,7 +103,7 @@ public class Tetris implements KeyListener {
 
     private JLabel linesLbl = new JLabel("Lines: " + lines);
 
-    private int board[][] = new int[17][10];
+    private int board[][] = new int[16][10];
 
     private ArrayList<Piece> pieces = new ArrayList<Piece>();
 
@@ -118,13 +118,13 @@ public class Tetris implements KeyListener {
     private JPanel panel = new JPanel();
 
     private boolean isNotDown(Piece piece) {
-       if(piece.blocks.get(0).y == 16
+       if(piece.blocks.get(0).y == 15
                 ||
-                piece.blocks.get(1).y == 16
+                piece.blocks.get(1).y == 15
                 ||
-                piece.blocks.get(2).y == 16
+                piece.blocks.get(2).y == 15
                 ||
-                piece.blocks.get(3).y == 16) {
+                piece.blocks.get(3).y == 15) {
            return false;
         }
         return true;
@@ -277,6 +277,7 @@ public class Tetris implements KeyListener {
 
                     juxtaposedTopways(pieces) || reachedTopThePiece()) {
 
+                if(reachedTopThePiece()) {
 try {
         				FileInputStream fr = new FileInputStream("score.dat");
 				        DataInputStream dr = new DataInputStream(fr);
@@ -317,9 +318,6 @@ try {
 					}
 				} catch(Exception ex) {
 				}
-				lines = 0;
-
-                if(reachedTopThePiece()) {
                     delay = 2000;
                     lines = 0;
                     for(int i=0; i<this.board.length; i++) {
@@ -429,7 +427,7 @@ try {
             boolean needToClearLine = true;
             ArrayList<Integer> linesToClear = new ArrayList<Integer>();
 
-            for(int y=0; y<17; y++) {
+            for(int y=0; y<16; y++) {
                 for(int x=0; x<10; x++) {
 
                     if(this.board[y][x] != 1) {
@@ -488,7 +486,7 @@ try {
                 }
             }
 
-            for(int i=0; i<17; i++) {
+            for(int i=0; i<16; i++) {
                 for(int j=0; j<10; j++) {
                     this.board[i][j] = 0;
                 }
